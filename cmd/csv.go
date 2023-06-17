@@ -107,7 +107,6 @@ func convertCSVToJSON(input string, output string, pretty bool, includeColumns, 
 	var data []*orderedmap.OrderedMap
 	header := records[0]
 	for _, row := range records[1:] {
-		// item := make(map[string]string)
 		item := orderedmap.New()
 		for i, cell := range row {
 			key := header[i]
@@ -126,7 +125,6 @@ func convertCSVToJSON(input string, output string, pretty bool, includeColumns, 
 				default:
 					// use default key
 				}
-				// item[key] = strings.Trim(cell, " ")
 				item.Set(key, strings.Trim(cell, " "))
 			}
 		}
