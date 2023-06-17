@@ -19,19 +19,48 @@ var csvCmd = &cobra.Command{
 	Short: "Convert csv to json",
 	Long:  "Convert csv to json",
 	Run: func(cmd *cobra.Command, args []string) {
-		input, _ := cmd.Flags().GetString("input")
-		output, _ := cmd.Flags().GetString("output")
-		pretty, _ := cmd.Flags().GetBool("pretty")
-		includeColumns, _ := cmd.Flags().GetString("includeColumns")
-		excludeColumns, _ := cmd.Flags().GetString("excludeColumns")
-		keyFormat, _ := cmd.Flags().GetString("keyFormat")
+		input, err := cmd.Flags().GetString("input")
+		if err != nil {
+			fmt.Println("Error: ", err)
+			os.Exit(1)
+		}
+
+		output, err := cmd.Flags().GetString("output")
+		if err != nil {
+			fmt.Println("Error: ", err)
+			os.Exit(1)
+		}
+
+		pretty, err := cmd.Flags().GetBool("pretty")
+		if err != nil {
+			fmt.Println("Error: ", err)
+			os.Exit(1)
+		}
+
+		includeColumns, err := cmd.Flags().GetString("includeColumns")
+		if err != nil {
+			fmt.Println("Error: ", err)
+			os.Exit(1)
+		}
+
+		excludeColumns, err := cmd.Flags().GetString("excludeColumns")
+		if err != nil {
+			fmt.Println("Error: ", err)
+			os.Exit(1)
+		}
+
+		keyFormat, err := cmd.Flags().GetString("keyFormat")
+		if err != nil {
+			fmt.Println("Error: ", err)
+			os.Exit(1)
+		}
 
 		if includeColumns != "" && excludeColumns != "" {
 			fmt.Println("Error: Cannot use both --include and --exclude at the same time")
 			os.Exit(1)
 		}
 
-		err := convertCSVToJSON(input, output, pretty, includeColumns, excludeColumns, keyFormat)
+		err = convertCSVToJSON(input, output, pretty, includeColumns, excludeColumns, keyFormat)
 		if err != nil {
 			fmt.Println("Error: ", err)
 			os.Exit(1)
