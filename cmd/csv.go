@@ -13,18 +13,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var input, output string
-var pretty bool
-var includeColumns string
-var excludeColumns string
-var keyFormat string
-
 // csvCmd represents the csv command
 var csvCmd = &cobra.Command{
 	Use:   "csv",
 	Short: "Convert csv to json",
 	Long:  "Convert csv to json",
 	Run: func(cmd *cobra.Command, args []string) {
+		input, _ := cmd.Flags().GetString("input")
+		output, _ := cmd.Flags().GetString("output")
+		pretty, _ := cmd.Flags().GetBool("pretty")
+		includeColumns, _ := cmd.Flags().GetString("includeColumns")
+		excludeColumns, _ := cmd.Flags().GetString("excludeColumns")
+		keyFormat, _ := cmd.Flags().GetString("keyFormat")
+
 		if includeColumns != "" && excludeColumns != "" {
 			fmt.Println("Error: Cannot use both --include and --exclude at the same time")
 			os.Exit(1)
@@ -40,13 +41,12 @@ var csvCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(csvCmd)
-
-	csvCmd.Flags().StringVarP(&input, "input", "i", "", "input csv file path (required)")
-	csvCmd.Flags().StringVarP(&output, "output", "o", "", "output json file path (optional)")
-	csvCmd.Flags().BoolVarP(&pretty, "pretty", "p", false, "pretty print the output json (optional)")
-	csvCmd.Flags().StringVarP(&includeColumns, "include", "n", "", "a comma-separated list of column names to be included in the json output (optional)")
-	csvCmd.Flags().StringVarP(&excludeColumns, "exclude", "e", "", "a comma-separated list of column names to be excluded in the json output (optional)")
-	csvCmd.Flags().StringVarP(&keyFormat, "keyFormat", "k", "default", "output json key format: camel, lowerCamel, snake or default (optional)")
+	csvCmd.Flags().StringP("input", "i", "", "input csv file path (required)")
+	csvCmd.Flags().StringP("output", "o", "", "output json file path (optional)")
+	csvCmd.Flags().BoolP("pretty", "p", false, "pretty print the output json (optional)")
+	csvCmd.Flags().StringP("include", "n", "", "a comma-separated list of column names to be included in the json output (optional)")
+	csvCmd.Flags().StringP("exclude", "e", "", "a comma-separated list of column names to be excluded in the json output (optional)")
+	csvCmd.Flags().StringP("keyFormat", "k", "default", "output json key format: camel, lowerCamel, snake or default (optional)")
 	csvCmd.MarkFlagRequired("input")
 }
 
@@ -121,7 +121,7 @@ func convertCSVToJSON(input string, output string, pretty bool, includeColumns, 
 					key = strcase.ToCamel(key)
 				case "lowerCamel":
 					key = strcase.ToLowerCamel(key)
-				case "nake":
+				case "snake":
 					key = strcase.ToSnake(key)
 				default:
 					// use default key
